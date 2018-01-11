@@ -1,0 +1,23 @@
+---
+- name: make a dummy connection
+  shell: echo "rs.isMaster().primary" | /usr/bin/mongo -quiet
+  changed_when: False
+  check_mode: false
+
+- name: try to get mongo master
+  shell: echo "rs.isMaster().primary" | /usr/bin/mongo -quiet | cut -d":" -f1
+  register: mongo_master_out
+  changed_when: False
+  check_mode: false
+
+- name: try to set mongo_master fact
+  set_fact: mongo_master={{ mongo_master_out.stdout }}
+  when: mongo_master_out|success and mongo_master_out.stdout != ""
+
+- name: use init node as mongo_master as fallback
+  set_fact: mongo_master={{ mongo_init_node_name }}
+  when: mongo_master is not defined
+
+- name: Print 'mongo_master' per node
+  debug:
+    msg: "{{ inventory_hostname }} -> {{ mongo_master }}"

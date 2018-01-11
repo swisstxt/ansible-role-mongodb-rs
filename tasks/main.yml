@@ -1,0 +1,12 @@
+---
+- include_tasks: preconditions.yml
+- include_tasks: update_hosts_file.yml
+- include_tasks: prepare.yml
+- include_tasks: configure.yml
+- include_tasks: start_mongod.yml
+- include_tasks: create_replicaset.yml
+- include_tasks: determine_masternode.yml
+- include_tasks: create_adminuser.yml
+- include_tasks: join_nodes.yml
+- include_tasks: create_users.yml
+- include_tasks: setup_backup.yml

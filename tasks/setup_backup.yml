@@ -1,0 +1,20 @@
+---
+- name: Use 'mongo_init_node_name' as 'mongo_backup_source' if not defined
+  set_fact: mongo_backup_source={{ mongo_init_node_name }}
+  when: mongo_backup_source is not defined
+
+- name: create folder for backup script
+  file: path=/opt/automongobackup owner=root group=root state=directory
+  when: mongo_backup_node is defined and mongo_backup_node
+
+- name: create backup destination
+  file: path={{ mongo_backup_destination }} owner=root group=root state=directory
+  when: mongo_backup_node is defined and mongo_backup_node
+
+- name: render backup script
+  template: src=automongobackup.sh.j2 dest=/opt/automongobackup/automongobackup.sh mode=0700
+  when: mongo_backup_node is defined and mongo_backup_node
+
+- name: create symlink to cron
+  file: src=/opt/automongobackup/automongobackup.sh dest=/etc/cron.daily/automongobackup owner=root group=root state=link
+  when: mongo_backup_node is defined and mongo_backup_node

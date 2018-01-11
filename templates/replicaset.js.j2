@@ -1,0 +1,8 @@
+rs.initiate( {
+   _id : "{{ mongo_replica_set }}",
+   members: [
+   {% for node in mongo_data_nodes %}
+      { _id: {{ loop.index0 }}, host: "{{ node }}:{{ mongo_mongod_port }}" }{{ "," if not loop.last else "" }}
+   {% endfor %}
+   ]
+});

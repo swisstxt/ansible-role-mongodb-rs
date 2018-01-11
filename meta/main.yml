@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  author: Daniel Menet
+  company: SWISS TXT
+  license: MIT
+  min_ansible_version: 1.6
+
+  platforms:
+  - name: CentOS
+    versions:
+    - all
+  - name: RHEL
+    versions:
+    - all
+  categories:
+  - system
+
+dependencies: []

@@ -1,0 +1,3 @@
+---
+- name: restart mongodb
+  include_tasks: handler_restart_mongod.yml

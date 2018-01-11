@@ -1,0 +1,27 @@
+---
+- name: create tuned profile directory
+  file: path=/usr/lib/tuned/mongod owner=root group=root state=directory
+
+- name: create tuned profile
+  register: mongo_tuned_profile
+  copy: src=mongod_tuned.conf dest=/usr/lib/tuned/mongod/tuned.conf owner=root group=root mode=644
+
+- name: load tuned profile
+  shell: tuned-adm profile mongod
+  when: mongo_tuned_profile|changed
+
+- name: update nproc limits
+  copy: src=20-nproc.conf dest=/etc/security/limits.d/20-nproc.conf owner=root group=root mode=644
+
+- name: create the keyfile for authentication
+  template:
+    src: secret.j2
+    dest: "{{ mongo_datadir }}/secret"
+    owner: mongod
+    group: mongod
+    mode: 0400
+  notify: restart mongodb
+
+- name: create the mongodb configuration file
+  template: src=mongod.conf.j2 dest=/etc/mongod.conf
+  notify: restart mongodb

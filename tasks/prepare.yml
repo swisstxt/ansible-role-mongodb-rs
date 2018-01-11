@@ -1,0 +1,31 @@
+---
+- name: place yum repo file
+  template:
+    src: mongodb-org-3.repo
+    dest: /etc/yum.repos.d/mongodb-org-{{mongo_version}}.repo
+    owner: root
+    group: root
+    mode: 644
+
+- name: install mongodb packages
+  yum:
+    name: "{{ item }}"
+    state: "{{ mongo_pkg_state }}"
+  register: mongo_installed
+  with_items:
+    - mongodb-org
+    - python2-pip
+  notify: restart mongodb
+
+- name: install pip dependencies
+  pip:
+    name: pymongo
+    state: latest
+
+- name: create the mongo data directory
+  file:
+    path: "{{ mongo_datadir }}"
+    owner: mongod
+    group: mongod
+    state: directory
+

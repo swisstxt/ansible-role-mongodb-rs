@@ -1,0 +1,35 @@
+---
+- name: Setup Replica Set
+  block:
+  - name: Set hostname to 'mongo_node_name'
+    hostname:
+      name: "{{ mongo_node_name }}"
+
+  - name: initiate the replication set
+    shell: echo "{{ cmd }}" | /usr/bin/mongo --port "{{ mongo_mongod_port }}" && echo "Replica set {{ mongo_replica_set }} is initialized at $(date)" > /etc/mongo.repset.init
+    args:
+      creates: /etc/mongo.repset.init
+    vars:
+      # cmd: "rs.initiate({ _id: '{{ mongo_replica_set }}', verison: 1, members: [ { _id: 0, host: '{{ mongo_node_name }}:{{ mongo_mongod_port }}'}]})"
+      cmd: "rs.initiate()"
+    register: mongo_initiated
+
+  - name: Reset hostname
+    hostname:
+      name: "{{ inventory_hostname }}"
+
+  - name: check status of cluster
+    shell: echo "rs.isMaster()" | /usr/bin/mongo --port '{{ mongo_mongod_port }}'
+    register: mongo_initiated_status
+    when: mongo_initiated is defined and mongo_initiated|success
+    until: mongo_initiated_status|skipped or mongo_initiated_status.stdout.find("primary") != -1
+    retries: 10
+    delay: 10
+    changed_when: False
+
+  - name: fail if primary node in not available
+    fail:
+      msg: "pimary node is not yet available, bootstrap or fix manually"
+    when: not mongo_initiated_status|skipped and mongo_initiated_status|success and "primary" not in mongo_initiated_status.stdout
+
+  when: mongo_init_node_name == inventory_hostname

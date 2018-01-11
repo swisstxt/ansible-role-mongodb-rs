@@ -1,0 +1,29 @@
+---
+- name: Set 'mongo_init_node_name' fact
+  set_fact: mongo_init_node_name={{hostvars[item]['inventory_hostname']}}
+  with_items: "{{ groups[mongo_group_name] }}"
+  when: hostvars[item]['mongo_init_node'] is defined
+
+- name: Fail if 'mongo_init_node_name' is undefined
+  fail:
+    msg: >
+      Fact 'mongo_init_node_name' is undefined. Flag variable 'mongo_init_node'
+      must be assigned to one host in group '{{ mongo_group_name }}'.
+  when: mongo_init_node_name is not defined
+
+- name: Fail if 'mongo_init_node_name' is also flags as arbiter
+  fail:
+    msg: >
+      'mongo_init_node' {{ mongo_init_node_name }} is also flagged as
+      'mongo_arbiter' which is not allowed.
+  run_once: true
+  when: hostvars[mongo_init_node_name]['mongo_arbiter'] is defined
+
+- name: Ensure 'mongo_node_name' is set
+  set_fact:
+    mongo_node_name: "{{ inventory_hostname }}"
+  when: mongo_node_name is not defined
+
+- name: Print 'mongo_node_name' per node
+  debug:
+    msg: "{{ inventory_hostname }} -> {{ mongo_node_name }}"

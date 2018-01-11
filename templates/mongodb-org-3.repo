@@ -1,0 +1,5 @@
+[mongodb-org-{{mongo_version}}]
+name=MongoDB Repository
+baseurl=http://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/{{mongo_version}}/x86_64/
+gpgcheck=0
+enabled=1

@@ -1,0 +1,7 @@
+---
+- name: Add 'mongo_node_name's to /etc/hosts if it differs from 'inventory_hostname'
+  lineinfile:
+    line: "{{ hostvars[item]['ansible_default_ipv4']['address'] }} {{ hostvars[item]['mongo_node_name'] }}"
+    path: "/etc/hosts"
+  with_items: "{{ groups[mongo_group_name] }}"
+  when: hostvars[item]['mongo_node_name'] != hostvars[item]['inventory_hostname']

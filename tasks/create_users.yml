@@ -1,0 +1,17 @@
+---
+- name: Create mongo users
+  mongodb_user:
+    login_database: admin
+    login_host: "{{ mongo_master }}"
+    login_port: "{{ mongo_mongod_port }}"
+    login_user: "{{ mongo_admin_user }}"
+    login_password: "{{ mongo_admin_pass }}"
+    replica_set: "{{ mongo_replica_set }}"
+    database: "{{ item.0.name }}"
+    name: "{{ item.1.name }}"
+    password: "{{ item.1.pass }}"
+    roles: "{{ item.1.roles }}"
+  with_subelements:
+  - "{{mongo_databases}}"
+  - users
+  when: mongo_master == inventory_hostname

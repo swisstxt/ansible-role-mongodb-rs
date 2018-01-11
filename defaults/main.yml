@@ -1,0 +1,14 @@
+---
+# control variables
+mongo_version: 3.6
+mongo_pkg_state: installed
+mongo_datadir: /data/mongo
+mongo_mongod_port: 27017
+mongo_manage_users: True
+mongo_manage_replica_set: True
+mongo_admin_user: admin
+mongo_admin_pass: topsecretpw
+mongo_backup_destination: /var/backups/mongodb
+
+# internal variables
+mongo_inited: False

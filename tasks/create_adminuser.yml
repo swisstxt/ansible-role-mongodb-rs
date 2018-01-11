@@ -1,0 +1,16 @@
+---
+- name: create admin user
+  mongodb_user:
+    database: admin
+    name: "{{ mongo_admin_user }}"
+    password: "{{ mongo_admin_pass }}"
+    roles:
+    - db: admin
+      role: userAdminAnyDatabase
+    - db: admin
+      role: root
+    - db: admin
+      role: dbAdminAnyDatabase
+    - db: admin
+      role: readWriteAnyDatabase
+  when: mongo_initiated is defined and mongo_initiated|changed and mongo_master == inventory_hostname

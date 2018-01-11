@@ -1,0 +1,6 @@
+---
+- name: start mongodb
+  service: name=mongod state=started enabled=yes
+
+- name: wait for mongodb to be ready
+  wait_for: port={{ mongo_mongod_port }}
