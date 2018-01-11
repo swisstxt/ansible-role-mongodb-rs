@@ -38,7 +38,7 @@ mongo_databases:
 
 ```yaml
 ---
-- hosts: mongo-cluster-*
+- hosts: mongo-rs-*
   remote_user: root
 
   roles:
@@ -48,7 +48,7 @@ mongo_databases:
   - name: get mongo_group_name
     set_fact: mongo_group_name="{{ item }}"
     with_items: group_names
-    when: item | search("mongo-cluster-*")
+    when: item | search("mongo-rs-*")
 
   - name: get mongo_replica_set
     set_fact: mongo_replica_set="{{ mongo_group_name }}"
