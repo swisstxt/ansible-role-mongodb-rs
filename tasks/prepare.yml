@@ -1,7 +1,7 @@
 ---
 - name: place yum repo file
   template:
-    src: mongodb-org-3.repo
+    src: mongodb-org-3.repo.j2
     dest: /etc/yum.repos.d/mongodb-org-{{mongo_version}}.repo
     owner: root
     group: root

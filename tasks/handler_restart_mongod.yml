@@ -1,1 +1,3 @@
 ---
+# this should restart all nodes "serial 1" and wait after each restart for the
+# database to be replicated
