@@ -5,6 +5,7 @@
     hostname:
       name: "{{ mongo_node_name }}"
 
+  # TODO: check if --eval can be used instead of pipe
   - name: initiate the replication set
     shell: echo "{{ cmd }}" | /usr/bin/mongo --port "{{ mongo_mongod_port }}" && echo "Replica set {{ mongo_replica_set }} is initialized at $(date)" > /etc/mongo.repset.init
     args:
