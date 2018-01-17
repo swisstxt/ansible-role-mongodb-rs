@@ -19,6 +19,7 @@
       name: "Backup MongoDB"
       job: /opt/automongobackup/automongobackup.sh
       cron_file: automongobackup
+      user: root
       day: "{{ mongo_backup_cron.day }}"
       hour: "{{ mongo_backup_cron.hour }}"
       minute: "{{ mongo_backup_cron.minute }}"

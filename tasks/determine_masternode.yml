@@ -19,7 +19,7 @@
   when: mongo_master_out|success and mongo_master_out.stdout != ""
 
 - name: use init node as mongo_master as fallback
-  set_fact: mongo_master={{ mongo_init_node_name }}
+  set_fact: mongo_master={{ hostvars[mongo_init_node_name]['mongo_node_name'] }}
   when: mongo_master is not defined
 
 - name: Print 'mongo_master' per node

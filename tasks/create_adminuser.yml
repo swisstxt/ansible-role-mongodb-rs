@@ -1,16 +1,11 @@
 ---
-- name: create admin user
-  mongodb_user:
-    database: admin
-    name: "{{ mongo_admin_user }}"
-    password: "{{ mongo_admin_pass }}"
-    roles:
-    - db: admin
-      role: userAdminAnyDatabase
-    - db: admin
-      role: root
-    - db: admin
-      role: dbAdminAnyDatabase
-    - db: admin
-      role: readWriteAnyDatabase
-  when: mongo_initiated is defined and mongo_initiated|changed and mongo_master == inventory_hostname
+- name: Create Admin User
+  block:
+
+  - name: create the file to initialize the mongo admin user
+    template: src=adminuser.js.j2 dest=/tmp/adminuser.js mode=0700
+
+  - name: create admin user
+    shell: /usr/bin/mongo --host localhost --port '{{ mongo_mongod_port }}' admin /tmp/adminuser.js
+
+  when: mongo_initiated is defined and mongo_initiated|changed and mongo_master == mongo_node_name
