@@ -1,0 +1,7 @@
+sleep(13000)
+db.createUser(
+{
+    user: '{{ mongo_admin_user }}',
+    pwd: '{{ mongo_admin_pass }}',
+    roles: [ 'userAdminAnyDatabase', 'root', 'dbAdminAnyDatabase', 'readWriteAnyDatabase' ]
+});
