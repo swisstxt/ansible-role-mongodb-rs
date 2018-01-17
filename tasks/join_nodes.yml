@@ -1,12 +1,16 @@
 ---
 - name: Add replica nodes
-  shell: echo "rs.add('{{ mongo_node_name }}:{{ mongo_mongod_port }}')" | /usr/bin/mongo --username '{{ mongo_admin_user }}' --password '{{ mongo_admin_pass }}' --host '{{ mongo_master }}' --port '{{ mongo_mongod_port }}' admin && echo "Node added to replica set {{ mongo_replica_set }} as regular node at $(date)" > /etc/mongo.repset.init
+  shell: /usr/bin/mongo --eval "{{ cmd }}" --username '{{ mongo_admin_user }}' --password '{{ mongo_admin_pass }}' --host '{{ mongo_master }}' --port '{{ mongo_mongod_port }}' admin && echo "Node added to replica set {{ mongo_replica_set }} as regular node at $(date)" > /etc/mongo.repset.init
+  vars:
+    cmd: "rs.add('{{ mongo_node_name }}:{{ mongo_mongod_port }}')"
   args:
     creates: /etc/mongo.repset.init
   when: mongo_arbiter is not defined
 
 - name: Add arbiters
-  shell: echo "rs.addArb('{{ mongo_node_name }}:{{ mongo_mongod_port }}')" | /usr/bin/mongo --username '{{ mongo_admin_user }}' --password '{{ mongo_admin_pass }}' --host '{{ mongo_master }}' --port '{{ mongo_mongod_port }}' admin && echo "Node added to replica set {{ mongo_replica_set }} as arbiter at $(date)" > /etc/mongo.repset.init
+  shell: /usr/bin/mongo --eval "{{ cmd }}" --username '{{ mongo_admin_user }}' --password '{{ mongo_admin_pass }}' --host '{{ mongo_master }}' --port '{{ mongo_mongod_port }}' admin && echo "Node added to replica set {{ mongo_replica_set }} as arbiter at $(date)" > /etc/mongo.repset.init
+  vars:
+    cmd: "rs.addArb('{{ mongo_node_name }}:{{ mongo_mongod_port }}')"
   args:
     creates: /etc/mongo.repset.init
   when: mongo_arbiter is defined

@@ -1,11 +1,15 @@
 ---
 - name: make a dummy connection
-  shell: echo "rs.isMaster().primary" | /usr/bin/mongo -quiet
+  shell: /usr/bin/mongo --quiet --eval "{{ cmd }}"
+  vars:
+    cmd: "rs.isMaster().primary"
   changed_when: False
   check_mode: false
 
 - name: try to get mongo master
-  shell: echo "rs.isMaster().primary" | /usr/bin/mongo -quiet | cut -d":" -f1
+  shell: /usr/bin/mongo --quiet --eval "{{ cmd }}" | cut -d":" -f1
+  vars:
+    cmd: "rs.isMaster().primary"
   register: mongo_master_out
   changed_when: False
   check_mode: false

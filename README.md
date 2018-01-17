@@ -12,7 +12,7 @@ None.
 [mongo-rs-testrs]
 mongo-01.domain.local mongo_node_name=mongo-01.example.com mongo_init_node=true
 mongo-02.domain.local mongo_node_name=mongo-02.example.com
-mongo-03.domain.local mongo_node_name=mongo-03.example.com mongo_backup_source=true mongo_arbiter=true
+mongo-03.domain.local mongo_node_name=mongo-03.example.com mongo_backup_node=true mongo_arbiter=true
 ```
 
 ## Example Group Vars

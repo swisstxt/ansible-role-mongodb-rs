@@ -4,9 +4,15 @@ mongo_version: 3.6
 mongo_pkg_state: installed
 mongo_datadir: /data/mongo
 mongo_mongod_port: 27017
+
 mongo_admin_user: admin
 mongo_admin_pass: topsecretpw
+
 mongo_backup_destination: /var/backups/mongodb
+mongo_backup_cron:
+  day: "*"
+  hour: "3"
+  minute: "33"
 
 # internal variables
 mongo_inited: False

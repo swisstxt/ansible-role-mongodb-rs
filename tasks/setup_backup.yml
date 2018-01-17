@@ -3,21 +3,23 @@
   set_fact: mongo_backup_source={{ mongo_init_node_name }}
   when: mongo_backup_source is not defined
 
-- name: create folder for backup script
-  file: path=/opt/automongobackup owner=root group=root state=directory
-  when: mongo_backup_node is defined and mongo_backup_node
+- name: Configure Backup
+  block:
+  - name: create folder for backup script
+    file: path=/opt/automongobackup owner=root group=root state=directory
 
-- name: create backup destination
-  file: path={{ mongo_backup_destination }} owner=root group=root state=directory
-  when: mongo_backup_node is defined and mongo_backup_node
+  - name: create backup destination
+    file: path={{ mongo_backup_destination }} owner=root group=root state=directory
 
-- name: render backup script
-  template: src=automongobackup.sh.j2 dest=/opt/automongobackup/automongobackup.sh mode=0700
-  when: mongo_backup_node is defined and mongo_backup_node
+  - name: render backup script
+    template: src=automongobackup.sh.j2 dest=/opt/automongobackup/automongobackup.sh mode=0700
 
-# TODO: use cron module with explicit time to control backup time with variables
-- name: create symlink to cron
-  file: src=/opt/automongobackup/automongobackup.sh dest=/etc/cron.daily/automongobackup owner=root group=root state=link
+  - name: Create entry in /etc/cron.d
+    cron:
+      name: "Backup MongoDB"
+      job: /opt/automongobackup/automongobackup.sh
+      cron_file: automongobackup
+      day: "{{ mongo_backup_cron.day }}"
+      hour: "{{ mongo_backup_cron.hour }}"
+      minute: "{{ mongo_backup_cron.minute }}"
   when: mongo_backup_node is defined and mongo_backup_node
-
-# TODO: use block for condition mongo_backup_node is defined and mongo_backup_node

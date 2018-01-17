@@ -5,9 +5,8 @@
     hostname:
       name: "{{ mongo_node_name }}"
 
-  # TODO: check if --eval can be used instead of pipe
   - name: initiate the replication set
-    shell: echo "{{ cmd }}" | /usr/bin/mongo --port "{{ mongo_mongod_port }}" && echo "Replica set {{ mongo_replica_set }} is initialized at $(date)" > /etc/mongo.repset.init
+    shell: /usr/bin/mongo --port "{{ mongo_mongod_port }}" --eval "{{ cmd }}" && echo "Replica set {{ mongo_replica_set }} is initialized at $(date)" > /etc/mongo.repset.init
     args:
       creates: /etc/mongo.repset.init
     vars:
@@ -20,7 +19,9 @@
       name: "{{ inventory_hostname }}"
 
   - name: check status of cluster
-    shell: echo "rs.isMaster()" | /usr/bin/mongo --port '{{ mongo_mongod_port }}'
+    shell: /usr/bin/mongo --port "{{ mongo_mongod_port }}" --eval "{{ cmd }}"
+    vars:
+      cmd: "rs.isMaster()"
     register: mongo_initiated_status
     when: mongo_initiated is defined and mongo_initiated|success
     until: mongo_initiated_status|skipped or mongo_initiated_status.stdout.find("primary") != -1
