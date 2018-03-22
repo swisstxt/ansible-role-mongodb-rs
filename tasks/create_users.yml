@@ -14,4 +14,9 @@
   with_subelements:
   - "{{mongo_databases}}"
   - users
-  when: mongo_master == inventory_hostname
+  when: mongo_master == mongo_node_name
+
+  # this module is crap
+  # use this command on the admin database as admin user to create a user manually:
+  #  db.createUser({user: "[USERNAME]", pwd: "[PW]", roles: [{ role: "dbOwner", db: "[DB]" }]})
+
