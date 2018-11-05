@@ -462,7 +462,7 @@ function select_secondary_member {
 
     # Return list of with all replica set members
     # shellcheck disable=SC2086
-    members=( $(mongo --quiet --host $DBHOST:$DBPORT --eval 'rs.conf().members.forEach(function(x){ print(x.host) })' $OPTSEC ) )
+    members=( $(mongo --quiet --host $DBHOST:$DBPORT --eval 'rs.conf().members.forEach(function(x){ if (!x.arbiterOnly){ print(x.host) } })' $OPTSEC ) )
     # Check each replset member to see if it's a secondary and return it.
     if [ ${#members[@]} -gt 1 ]; then
         for member in "${members[@]}"; do
