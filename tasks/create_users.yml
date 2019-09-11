@@ -15,6 +15,8 @@
   - "{{mongo_databases}}"
   - users
   when: mongo_master == mongo_node_name
+  loop_control:
+    label: "database={{ item.0.name }} user={{ item.1.name }} roles={{ item.1.roles }}"
 
   # this module is crap
   # use this command on the admin database as admin user to create a user manually:
