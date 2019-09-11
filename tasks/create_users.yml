@@ -15,6 +15,7 @@
   - "{{mongo_databases}}"
   - users
   when: mongo_master == mongo_node_name
+  tags: mongo_users
 
   # this module is crap
   # use this command on the admin database as admin user to create a user manually:
