@@ -5,12 +5,14 @@
 - include_tasks: configure.yml
 - include_tasks: start_mongod.yml
 - include_tasks: create_replicaset.yml
-- include_tasks: determine_masternode.yml
+- include_tasks:
+    file: determine_masternode.yml
+  tags: always
 - include_tasks: create_adminuser.yml
 - include_tasks: join_nodes.yml
 - include_tasks:
     file: create_users.yml
     apply:
       tags: [ mongo_users ]
-  tags: [ mongo_users ]
+  tags: always
 - include_tasks: setup_backup.yml
